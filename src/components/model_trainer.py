@@ -12,7 +12,7 @@ from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 from xgboost import XGBRegressor
-from src.utlis import save_object,evaluate_model
+from src.utils import save_object,evaluate_model
 from src.logger import logging 
 from src.exception import CustomException 
 
@@ -84,22 +84,30 @@ class ModelTrainer:
             }
             
 
-            model_report:dict=evaluate_model(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,models=models,param=params)
+            model_report, trained_models = evaluate_model(
+                X_train=X_train, 
+                y_train=y_train,
+                X_test=X_test,
+                y_test=y_test,
+                models=models,
+                param=params
+            )
 
-            ## to get best model score and name from dict
             best_model_name = max(model_report, key=model_report.get)
-            best_model_score = model_report[best_model_name] 
-            best_model = models[best_model_name]
+            best_model_score = model_report[best_model_name]
+            best_model = trained_models[best_model_name]
 
-            if best_model_score < 0.6: 
+            if best_model_score < 0.6:
                 raise CustomException("No best model found")
-            
-            logging.info(f"best found model on both training and testing dataset")
+
+            logging.info(f"Best model found: {best_model_name}")
 
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,
-                obj=best_model_name
+                obj=best_model
             )
+
+            # Validate after training
             predicted = best_model.predict(X_test)
 
             r2_square = r2_score(y_test, predicted)
