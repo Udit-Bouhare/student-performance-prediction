@@ -59,3 +59,23 @@ This project follows a **production-style CI/CD pipeline**:
 - Application is containerized using Docker
 - Gunicorn is used as the production server
 - Docker images are stored in GHCR
+
+## 🧪 Testing
+
+- Unit tests written using `pytest`
+- Tests are mandatory in CI
+- Deployment happens only after tests pass
+
+---
+
+## 🚀 Deployment
+
+- Deployed on **Render**
+- Uses Docker image from **GitHub Container Registry**
+- No manual deployment steps
+
+---
+
+## 📌 Notes
+
+This project demonstrates **real-world ML deployment practices**, including CI/CD, Dockerization, automated testing, and cloud deployment.
